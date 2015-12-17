@@ -1,0 +1,39 @@
+
+import java.sql.*;
+import java.util.*;
+
+public class myData {
+
+    public static void main(String[] argv) throws Throwable {
+        
+        Class.forName("org.postgresql.Driver");
+        Connection con = null;
+        con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres"," ", "");
+
+        if (con != null) {
+                PreparedStatement ps = con.prepareStatement("select* from postgres");
+                ResultSet rSet = ps.executeQuery();
+                ResultSetMetaData mdata = rSet.getMetaData();
+                int columns = mdata.getColumnCount();
+                for (int i = 1; i <= columns; i++) {
+                    if (i > 1)
+                        System.out.print(" /t  ");
+                    System.out.print(mdata.getColumnName(i));
+                }
+                while (rSet.next()) {
+                    for (int i = 1; i <= columns; i++) {
+                        if (i > 1)
+                            System.out.print("/t ");
+                        String col_Value = rSet.getString(i);
+                        System.out.print(col_Value);
+                    }
+                    
+                }
+            
+        } 
+        else {
+            System.out.println("Cannot connect to server");
+        }
+    }
+
+}
